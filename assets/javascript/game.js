@@ -30,61 +30,73 @@ window.onload = function() {
 	// button action that displays the gifs from giphy
 	$(document).on("click", ".gifButton", function(){
 
-		// clears gif div so only the intended gifs are displayed
-		$("#jsonHolder").empty();
-
-		// grabbing button value
-		var type = $(this).val();
-
 		// getting option value from user to set number of gifs to be displayed
 		var gifNum = document.getElementById( "gif-number" );
 		gifCount = gifNum.options[ gifNum.selectedIndex ].value;
+		
+		// if gifCount hasnt been selected, alert user
+		if (gifCount == "Choose # of GIFs") {
+			alert("How many GIFs do you want??");
+		}
 
-		// randomized gif pull of button value????????
-		// var queryURL = "http://api.giphy.com/v1/gifs/random?rating=&api_key=dc6zaTOxFJmzC&tag="+type;
+		// else, run the giphy API pull amd display
+		else {
 
-		// build giphy queryURL based on btn value and # of gifs desired
-		var queryURL = "http://api.giphy.com/v1/gifs/search?q="+type+"&limit="+gifCount+"&api_key=dc6zaTOxFJmzC"
+			// clears gif div so only the intended gifs are displayed
+			$("#jsonHolder").empty();
 
-		// use ajax to pull data from giphy API
-		$.ajax({
-			url: queryURL,
-			method: "GET"
-		}).done(function(response){
+			// grabbing button value
+			var type = $(this).val();
 
-			// use for loop to cycle through each returned object(gif) based on gifCount
-			for (var i=0;i<gifCount;i++) {
+			// randomized gif pull of button value????????
+			// var queryURL = "http://api.giphy.com/v1/gifs/random?rating=&api_key=dc6zaTOxFJmzC&tag="+type;
 
-				// get and store still gif url
-				var gifStillUrl = response.data[i].images.fixed_height_small_still.url;
-				
-				// get and store animated gif url
-				var gifAnimateUrl = response.data[i].images.fixed_width_downsampled.url;
+			// build giphy queryURL based on btn value and # of gifs desired
+			var queryURL = "http://api.giphy.com/v1/gifs/search?q="+type+"&limit="+gifCount+"&api_key=dc6zaTOxFJmzC"
 
-				// get and store gif rating
-				var rating = response.data[i].rating;
+			// use ajax to pull data from giphy API
+			$.ajax({
+				url: queryURL,
+				method: "GET"
+			}).done(function(response){
 
-				// create image tag and p tag for gif and rating
-				var gifImage = $("<img>");
-				var gifRating = $("<p>");
+				// use for loop to cycle through each returned object(gif) based on gifCount
+				for (var i=0;i<gifCount;i++) {
 
-				// setting default, still, animated, state, and class attr's for gif
-		        gifImage.attr("src", gifStillUrl);
-		        gifImage.attr("data-still", gifStillUrl);
-		        gifImage.attr("data-animate", gifAnimateUrl);
-		        gifImage.attr("data-state", "still");
-		        gifImage.attr("class", "gif");
-		        gifImage.attr("alt", "gif");
+					// get and store still gif url
+					var gifStillUrl = response.data[i].images.fixed_height_small_still.url;
+					
+					// get and store animated gif url
+					var gifAnimateUrl = response.data[i].images.fixed_width_downsampled.url;
 
-		        // setting text for rating display
-		        gifRating.text("Rating: "+rating);
+					// get and store gif rating
+					var rating = response.data[i].rating;
 
-		        // prepending both to div
-		        $("#jsonHolder").prepend(gifRating, gifImage);
-	    	}
+					// create image tag and p tag for gif and rating
+					var gifImage = $("<img>");
+					var gifRating = $("<p>");
 
-		})
+					// setting default, still, animated, state, and class attr's for gif
+			        gifImage.attr("src", gifStillUrl);
+			        gifImage.attr("data-still", gifStillUrl);
+			        gifImage.attr("data-animate", gifAnimateUrl);
+			        gifImage.attr("data-state", "still");
+			        gifImage.attr("class", "gif");
+			        gifImage.attr("alt", "gif");
 
+			        // setting text for rating display
+			        gifRating.text("Rating: "+rating);
+
+			        // prepending both to div
+			        $("#jsonHolder").prepend(gifRating, gifImage);
+		    	}
+
+			})
+
+		}
+
+		
+		
 	});
 
 	// click "submit" for adding new buttons
