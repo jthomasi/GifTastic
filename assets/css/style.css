@@ -1,0 +1,16 @@
+form {
+	width: 50%;
+	float: right;
+	margin-top: 70px;
+	margin-left: 50px;
+}
+
+#jsonHolder {
+	width: 46%;
+	float: left;
+	margin-bottom: 20px;
+}
+
+#gif-number {
+	margin-top: 10px;
+}

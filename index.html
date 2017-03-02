@@ -2,180 +2,46 @@
 <html>
 <head>
 	<title>GifTastic</title>
+	<link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
+	<link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+	<script type="text/javascript" src="assets/javascript/game.js"></script>
+	<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
 </head>
 <body>
 
+	<!--Container Div-->
 	<div class="container">
 		
 		<h1> Gif Search Bank </h1>
 
-		<!--Holds the input and submit for adding new buttons to the page-->
-		<form id="gif-form">
-
-		    <label for="gif-input">Add a Gif Catagory: </label>
-		    <input type="text" id="gif-input">
-		    <br>
-
-		    <input id="add-gif" type="submit" value="Submit">
-
-	    </form>
-
 		<!--Where the buttons are placed-->
 	    <div id="gifs-view"></div>
 
-		<!--Options for the number of gifs to be displayed-->
+	    <!--Options for the number of gifs to be displayed-->
 	    <select id="gif-number"> 
-			<option value=""></option>
+			<option selected disabled>Choose # of GIFs</option>
 			<option value="1">1</option>
 			<option value="5">5</option>
 			<option value="10">10</option>
 			<option value="25">25</option>
+			<option value="100">100</option>
 		</select>
+		
+		<!--Holds the input and submit for adding new buttons to the page-->
+		<form id="gif-form">
+		    <label for="gif-input">Add a Gif Catagory: </label>
+		    <!-- Input Box -->
+		    <input type="text" id="gif-input">
+		    <br>
+			<!-- Submit button -->
+		    <input id="add-gif" class="btn btn-primary" type="submit" value="Submit">
+	    </form>
 
-		<!--Where the gifs are dumped-->
+		<!--Where the gifs and ratings are dumped-->
 		<div id="jsonHolder"></div>
-
-		<script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
-	  	<script type="text/javascript">
-
-	  		// Default buttons listed to user
-	  		var topics = ["dogs","cats","birds"];
-
-	  		// Creating variable for number of gifs
-	  		var gifCount;
-
-	  		// Creates buttons
-	  		function renderButtons(){
-
-	  			// Clears div so it wont rewrite buttons when adding new ones
-		  		$("#gifs-view").empty();
-
-		  		// Creats buttons and attr's for each element in "topics", writes them to "gifs-view" div
-		  		for (var i=0;i<topics.length;i++){
-		  			var btn = $("<button>").attr("id", topics[i]).attr("class", "gifButton").val(topics[i]).text(topics[i]);
-		  			$("#gifs-view").append(btn);
-		        }
-  			};
-
-  			// button action that displays the gifs from giphy
-  			$(document).on("click", ".gifButton", function(){
-
-  				// clears gif div so only the intended gifs are displayed
-  				$("#jsonHolder").empty();
-
-  				// grabbing button value
-  				var type = $(this).val();
-
-  				// getting option value from user to set number of gifs to be displayed
-  				var gifNum = document.getElementById( "gif-number" );
-				gifCount = gifNum.options[ gifNum.selectedIndex ].value; 
-
-				// since using a randomized giphy gif pull (below), use for loop to get new random gif with each "i" and/or click
-  				
-
-  					// randomized gif pull of button value
-	  				//var queryURL = "http://api.giphy.com/v1/gifs/random?rating=&api_key=dc6zaTOxFJmzC&tag="+type;
-
-  				var queryURL = "http://api.giphy.com/v1/gifs/search?q="+type+"&offset=3&api_key=dc6zaTOxFJmzC"
-
-  				// use ajax to pull data
-  				$.ajax({
-  					url: queryURL,
-  					method: "GET"
-  				}).done(function(response){
-
-  					for (var i=0;i<gifCount;i++) {
-
-						// get and store still gif url
-						var gifStillUrl = response.data[i].images.fixed_height_small_still.url;
-						console.log(gifStillUrl);
-						//fixed_height_small_still_url;
-						// get and store animated gif url
-						var gifAnimateUrl = response.data[i].images.fixed_width_downsampled.url;
-
-						var rating = response.data[i].rating;
-						console.log(rating);
-
-						// create image tag for gif
-	  					var gifImage = $("<img>");
-	  					var gifRating = $("<p>");
-
-	  					gifRating.text("Rating: "+rating);
-
-	  					// setting default, still, animated, state, and class attr's
-				        gifImage.attr("src", gifStillUrl);
-				        gifImage.attr("data-still", gifStillUrl);
-				        gifImage.attr("data-animate", gifAnimateUrl);
-				        gifImage.attr("data-state", "still");
-				        gifImage.attr("class", "gif");
-				        gifImage.attr("alt", "gif");
-
-				        // prepending to div
-				        $("#jsonHolder").prepend(gifImage, gifRating);
-				    }
-
-				})
-	  					
-				
-
-  			});
-
-  			// click "submit" for adding new buttons
-  			$(document).on("click", "#add-gif", function(){
-
-  				// prevents default action
-  				event.preventDefault();
-
-  				// grab value from input box, store in variable
-  				var newGif = $("#gif-input").val();
-
-  				// push variable to "topics" list
-  				topics.push(newGif);
-
-  				// create newly updated list of buttons
-  				renderButtons();
-
-  			});
-
-  			// click action for animating and deanimating gifs upon click
-  			$(document).on("click", ".gif", function(){
-
-  				// prevents default action
-  				event.preventDefault();
-
-  				// grabs the "state" attr from clicked gif
-  				var state = $(this).attr("data-state");
-
-  				// checks if state is still
-  				if (state == "still") {
-
-  					// grabs animated src, stores in variable
-  					var animateData = $(this).attr("data-animate");
-  					// changes "data-state" to animate
-  					$(this).attr("data-state", "animate");
-  					// sets src to animated gif URL
-  					$(this).attr("src", animateData);
-
-  				}
-
-  				// checks if state is animated
-  				if (state == "animate") {
-
-  					// grabs still src, stores in variable
-  					var stillData = $(this).attr("data-still");
-  					// changes "data-state" to still
-  					$(this).attr("data-state", "still");
-  					// sets src to still gif URL
-  					$(this).attr("src", stillData);
-
-  				}
-
-  			});
-
-  			// inital button creation of default "topics" list
-  			renderButtons();
-
-	  	</script>
 
 	</div>
 
