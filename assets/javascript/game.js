@@ -38,7 +38,7 @@ window.onload = function() {
 
 		// getting option value from user to set number of gifs to be displayed
 		var gifNum = document.getElementById( "gif-number" );
-		gifCount = gifNum.options[ gifNum.selectedIndex ].value; 
+		gifCount = gifNum.options[ gifNum.selectedIndex ].value;
 
 		// randomized gif pull of button value????????
 		// var queryURL = "http://api.giphy.com/v1/gifs/random?rating=&api_key=dc6zaTOxFJmzC&tag="+type;
