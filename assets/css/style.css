@@ -1,12 +1,23 @@
 form {
-	width: 50%;
+	width: 35%;
 	float: right;
-	margin-top: 70px;
+	margin-top: 40px;
 	margin-left: 50px;
 }
 
+ul, li {
+	display: inline;
+	margin: 10px;
+}
+
+li {
+	display: inline;
+	float: left;
+}
+
 #jsonHolder {
-	width: 46%;
+	width: 65%;
+	height: 75%;
 	float: left;
 	margin-bottom: 20px;
 }

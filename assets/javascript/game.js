@@ -52,13 +52,16 @@ window.onload = function() {
 			// var queryURL = "http://api.giphy.com/v1/gifs/random?rating=&api_key=dc6zaTOxFJmzC&tag="+type;
 
 			// build giphy queryURL based on btn value and # of gifs desired
-			var queryURL = "http://api.giphy.com/v1/gifs/search?q="+type+"&limit="+gifCount+"&api_key=dc6zaTOxFJmzC"
+			var queryURL = "https://api.giphy.com/v1/gifs/search?q="+type+"&limit="+gifCount+"&api_key=dc6zaTOxFJmzC"
 
 			// use ajax to pull data from giphy API
 			$.ajax({
 				url: queryURL,
 				method: "GET"
 			}).done(function(response){
+
+				// creates list container to store li items to display inline
+				var listContainer = $("<ul>");
 
 				// use for loop to cycle through each returned object(gif) based on gifCount
 				for (var i=0;i<gifCount;i++) {
@@ -72,9 +75,11 @@ window.onload = function() {
 					// get and store gif rating
 					var rating = response.data[i].rating;
 
-					// create image tag and p tag for gif and rating
+					// create li to hold figure which holds the img and its caption
+					var listofGifs = $("<li>");
+					var figureTag = $("<figure>");
 					var gifImage = $("<img>");
-					var gifRating = $("<p>");
+					var gifRating = $("<figcaption>");
 
 					// setting default, still, animated, state, and class attr's for gif
 			        gifImage.attr("src", gifStillUrl);
@@ -87,16 +92,17 @@ window.onload = function() {
 			        // setting text for rating display
 			        gifRating.text("Rating: "+rating);
 
-			        // prepending both to div
-			        $("#jsonHolder").prepend(gifRating, gifImage);
+			        //adding img and caption to figure, then to li, then to ul
+			        figureTag.append(gifImage, gifRating);
+			        listofGifs.append(figureTag);
+			        listContainer.append(listofGifs);
+			        
+			        // prepending all to div
+			        $("#jsonHolder").prepend(listContainer);
+
 		    	}
-
 			})
-
 		}
-
-		
-		
 	});
 
 	// click "submit" for adding new buttons
